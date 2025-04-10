@@ -1,43 +1,52 @@
 package com.example.practice1.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
-import com.example.practice1.models.Gender;
-import com.example.practice1.models.MaritalStatus;
-import com.example.practice1.models.Nationality;
-import com.example.practice1.models.Title;
+import com.example.practice1.model.Gender;
+import com.example.practice1.model.MaritalStatus;
+import com.example.practice1.model.Nationality;
+import com.example.practice1.model.Title;
 
 public class PersonalDetailsDto {
-	private Long id;
-	private Title title;
+
+//	private Title title;
+	private String title;
+
 	private String fullName;
-	private Gender gender;
-	private Date dateOfBirth;
-	private Nationality nationality;
-	private MaritalStatus maritalStatus;
+
+	private String gender;
+//	private Gender gender;
+	private LocalDate dateOfBirth;
+
+//	private Nationality nationality;
+	private String nationality;
+
+//	private MaritalStatus maritalStatus;
+	private String maritalStatus;
 	private String panNumber;
-	private String email;
+	private String emailId;
 	private String mobileNumber;
 	private String alternateMobileNumber;
 	private String address;
 	private String pincode;
 	private String city;
 	private String state;
-	private String status;
+	private Character status;
 
-	public Long getId() {
-		return id;
-	}
+//	public Title getTitle() {
+//		return title;
+//	}
+//
+//	public void setTitle(Title title) {
+//		this.title = title;
+//	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Title getTitle() {
+	public String getTitle() {
 		return title;
 	}
 
-	public void setTitle(Title title) {
+	public void setTitle(String title) {
 		this.title = title;
 	}
 
@@ -49,35 +58,59 @@ public class PersonalDetailsDto {
 		this.fullName = fullName;
 	}
 
-	public Gender getGender() {
+	public String getGender() {
 		return gender;
 	}
 
-	public void setGender(Gender gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 
-	public Date getDateOfBirth() {
+//	public Gender getGender() {
+//		return gender;
+//	}
+//
+//	public void setGender(Gender gender) {
+//		this.gender = gender;
+//	}
+
+	public LocalDate getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(Date dateOfBirth) {
+	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
-	public Nationality getNationality() {
+//	public Nationality getNationality() {
+//		return nationality;
+//	}
+//
+//	public void setNationality(Nationality nationality) {
+//		this.nationality = nationality;
+//	}
+
+	public String getNationality() {
 		return nationality;
 	}
 
-	public void setNationality(Nationality nationality) {
+	public void setNationality(String nationality) {
 		this.nationality = nationality;
 	}
 
-	public MaritalStatus getMaritalStatus() {
+//	public MaritalStatus getMaritalStatus() {
+//		return maritalStatus;
+//	}
+//
+//	public void setMaritalStatus(MaritalStatus maritalStatus) {
+//		this.maritalStatus = maritalStatus;
+//	}
+
+	public String getMaritalStatus() {
 		return maritalStatus;
 	}
 
-	public void setMaritalStatus(MaritalStatus maritalStatus) {
+	public void setMaritalStatus(String maritalStatus) {
 		this.maritalStatus = maritalStatus;
 	}
 
@@ -89,12 +122,12 @@ public class PersonalDetailsDto {
 		this.panNumber = panNumber;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getEmailId() {
+		return emailId;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 
 	public String getMobileNumber() {
@@ -145,11 +178,11 @@ public class PersonalDetailsDto {
 		this.state = state;
 	}
 
-	public String getStatus() {
+	public Character getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Character status) {
 		this.status = status;
 	}
 
