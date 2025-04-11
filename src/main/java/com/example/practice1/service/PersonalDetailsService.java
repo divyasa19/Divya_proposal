@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.practice1.dto.PersonalDetailsDto;
 import com.example.practice1.listing.ProposerListing;
 import com.example.practice1.model.PersonalDetails;
@@ -22,10 +24,12 @@ public interface PersonalDetailsService {
 	void deletePersonalDetails(Integer personalDetailsId);
 
 	List<PersonalDetails> getPersonalDetails(ProposerListing proposerListig);
-	
-	Integer totalRecords();
-	
-	 void exportPersonalDetailsToExcel(HttpServletResponse response) throws IOException;
-	
 
+	Integer totalRecords();
+
+	void exportPersonalDetailsToExcel(HttpServletResponse response) throws IOException;
+
+	String sampleExcel() throws IOException;
+	
+	  List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException;
 }

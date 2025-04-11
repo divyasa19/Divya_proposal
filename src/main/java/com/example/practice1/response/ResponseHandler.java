@@ -4,13 +4,12 @@ public class ResponseHandler {
 	private Boolean status;
 	private Object data;
 	private String message;
-	private long totalRecords ;
+	private long totalRecords;
 
 	public ResponseHandler() {
 		super();
 	}
 
-	
 	public ResponseHandler(Boolean status, Object data, String message, long totalRecords) {
 		super();
 		this.status = status;
@@ -18,7 +17,6 @@ public class ResponseHandler {
 		this.message = message;
 		this.totalRecords = totalRecords;
 	}
-
 
 	public Boolean getStatus() {
 		return status;
@@ -44,15 +42,12 @@ public class ResponseHandler {
 		this.message = message;
 	}
 
-
 	public long getTotalRecords() {
 		return totalRecords;
 	}
 
-
 	public void setTotalRecords(long totalRecords) {
 		this.totalRecords = totalRecords;
 	}
-	
-	
+
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.practice1.dto.PersonalDetailsDto;
 import com.example.practice1.listing.ProposerListing;
@@ -22,6 +25,7 @@ import com.example.practice1.repository.PersonalDetailsRepository;
 import com.example.practice1.response.ResponseHandler;
 import com.example.practice1.service.PersonalDetailsService;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
@@ -224,4 +228,43 @@ public class PersonalDetailsController {
 		return responseHandler;
 
 	}
+
+	@GetMapping("sample_excel")
+	public ResponseHandler sampleExcel() {
+		ResponseHandler responseHandler = new ResponseHandler();
+		try {
+
+			String downloadLink = personalDetailsService.sampleExcel();
+			responseHandler.setData(downloadLink);
+			responseHandler.setMessage("Excel file generated successfully");
+			responseHandler.setStatus(true);
+
+		} catch (Exception e) {
+
+			responseHandler.setMessage("Error");
+			responseHandler.setStatus(false);
+		}
+		return responseHandler;
+
+	}
+
+	@PostMapping(value = "import_personal_details", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseHandler importPersonalDetails(
+			@Parameter(description = "Excel file to upload", required = true) @RequestParam("file") MultipartFile file) {
+		ResponseHandler responseHandler = new ResponseHandler();
+		try {
+			List<PersonalDetails> savedExceList = personalDetailsService.importPersonalDetailsFromExcel(file);
+
+			responseHandler.setData(savedExceList);
+			responseHandler.setMessage("Excel data imported successfully");
+			responseHandler.setStatus(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			responseHandler.setMessage("Failed to import Excel data: " + e.getMessage());
+			responseHandler.setStatus(false);
+			responseHandler.setData(new ArrayList<>());
+		}
+		return responseHandler;
+	}
+
 }
