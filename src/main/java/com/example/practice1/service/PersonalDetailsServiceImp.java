@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -699,57 +698,435 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 
 	}
 
+//	@Override
+//	public List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException {
+//		List<PersonalDetails> savedExcelList = new ArrayList<>();
+//		try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
+//			XSSFSheet sheet = workbook.getSheetAt(0);
+//			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+//				XSSFRow row = sheet.getRow(i);
+//				if (row == null)
+//					continue;
+//				PersonalDetailsDto dto = new PersonalDetailsDto();
+//				dto.setTitle(getCellString(row.getCell(0)));
+//				dto.setFullName(getCellString(row.getCell(1)));
+//				dto.setGender(getCellString(row.getCell(2)));
+//					
+//				Cell dobCell = row.getCell(3);
+//				if (dobCell != null && dobCell.getCellType() == CellType.NUMERIC
+//						&& DateUtil.isCellDateFormatted(dobCell)) {
+//					dto.setDateOfBirth(dobCell.getLocalDateTimeCellValue().toLocalDate());
+//				}
+//				dto.setNationality(getCellString(row.getCell(4)));
+//				dto.setMaritalStatus(getCellString(row.getCell(5)));
+//				dto.setPanNumber(getCellString(row.getCell(6)));
+//				dto.setEmailId(getCellString(row.getCell(7)));
+//				dto.setMobileNumber(getCellString(row.getCell(8)));
+//				dto.setAlternateMobileNumber(getCellString(row.getCell(9)));
+//				dto.setAddress(getCellString(row.getCell(10)));
+//				dto.setPincode(getCellString(row.getCell(11)));
+//				dto.setCity(getCellString(row.getCell(12)));
+//				dto.setState(getCellString(row.getCell(13)));
+//				
+//				try {
+//					PersonalDetails saved = savePersonalDetails(dto);
+//					savedExcelList.add(saved);
+//				}catch(IllegalArgumentException e) {
+//					System.out.println("Error saving row "+i+": "+e.getMessage());
+//				}
+//			}
+//			return savedExcelList;
+//		}	
+//	}
+
+//	@Override
+//	public List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException {
+//
+//		List<PersonalDetails> savedList = new ArrayList<>();
+//
+//		try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
+//			XSSFSheet sheet = workbook.getSheetAt(0);
+//
+//			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+//				XSSFRow row = sheet.getRow(i);
+//				if (row == null)
+//					continue;
+//
+//				PersonalDetails details = new PersonalDetails();
+//
+//				String title = getCellString(row.getCell(0)).trim();
+////				try {
+////					details.setTitle(Title.valueOf(title.toUpperCase()));
+////				} catch (IllegalArgumentException e) {
+////					System.out.println("Invalid Title value in row " + i);
+////					continue;
+////				}
+//				
+//				
+//
+//				String fullName = getCellString(row.getCell(1)).trim();
+//				details.setFullName(fullName);
+//
+////				String genderStr = getCellString(row.getCell(2)).trim().toUpperCase();
+////				try {
+////
+////					Gender gender = Gender.valueOf(genderStr);
+////					details.setGender(gender);
+////					details.setGenderId(getGenderId(gender));
+////
+////				} catch (IllegalArgumentException e) {
+////					System.out.println("Invalid Gender value in row " + i);
+////					continue;
+////				}
+//
+//				Cell dobCell = row.getCell(3);
+//				details.setDateOfBirth(dobCell.getLocalDateTimeCellValue().toLocalDate());
+//
+////				String nationality = getCellString(row.getCell(4)).trim();
+////				try {
+////					details.setNationality(Nationality.valueOf(nationality.toUpperCase()));
+////				} catch (IllegalArgumentException e) {
+////					System.out.println("Invalid Nationality value in row " + i);
+////					continue;
+////				}
+//
+////				String maritalStatus = getCellString(row.getCell(5)).trim();
+////				try {
+////					details.setMaritalStatus(MaritalStatus.valueOf(maritalStatus.toUpperCase()));
+////				} catch (IllegalArgumentException e) {
+////					System.out.println("Invalid Marital Status value in row " + i);
+////					continue;
+////				}
+//
+//				
+//				
+//				
+//				String pan = getCellString(row.getCell(6)).trim();
+//				details.setPanNumber(pan);
+//				
+//				String email = getCellString(row.getCell(7)).trim();
+//				details.setEmailId(email);
+//
+//				String mobile = getCellString(row.getCell(8)).trim();
+//				details.setMobileNumber(mobile);
+//
+//				String altMobile = getCellString(row.getCell(9)).trim();
+//				details.setAlternateMobileNumber(altMobile);
+//
+//				String address = getCellString(row.getCell(10)).trim();
+//				details.setAddress(address);
+//
+//				String pincode = getCellString(row.getCell(11)).trim();
+//				details.setPincode(pincode);
+//
+//				String city = getCellString(row.getCell(12)).trim();
+//				details.setCity(city);
+//
+//				String state = getCellString(row.getCell(13)).trim();
+//				details.setState(state);
+//
+//				details.setStatus('Y');
+//
+//				boolean isValid = validateDetails(details);
+//
+//				if (isValid) {
+//					savedList.add(personalDetailsRepository.save(details));
+//				} else {
+//					System.out.println("Skipping row " + i);
+//				}
+//			}
+//		} catch (Exception e) {
+//			System.out.println("Error reading the Excel file: " + e.getMessage());
+//		}
+//
+//		return savedList;
+//	}
+//
+//	private boolean validateDetails(PersonalDetails details) {
+//		try {
+//			if (details.getTitle() == null)
+//				return false;
+//
+//			if (details.getFullName() == null || details.getFullName().isEmpty()
+//					|| !details.getFullName().matches("^[A-Za-z\\s]+$"))
+//				return false;
+//
+//			if (details.getGender() == null)
+//				return false;
+//
+//			if (details.getDateOfBirth() == null)
+//				return false;
+//
+//			if (details.getNationality() == null)
+//				return false;
+//
+//			if (details.getMaritalStatus() == null)
+//				return false;
+//
+//			String pan = details.getPanNumber();
+//			if (pan == null || pan.isEmpty() || !pan.matches("^[A-Z]{5}[0-9]{4}[A-Z]$"))
+//				return false;
+//
+//			String email = details.getEmailId();
+//			if (email == null || email.isEmpty() || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
+//				return false;
+//
+//			String mobile = details.getMobileNumber();
+//			if (mobile == null || mobile.isEmpty() || !mobile.matches("^[0-9]{10}$"))
+//				return false;
+//
+//			String altMobile = details.getAlternateMobileNumber();
+//			if (altMobile != null && !altMobile.isEmpty() && !altMobile.matches("^[0-9]{10}$"))
+//				return false;
+//
+//			String address = details.getAddress();
+//			if (address != null && !address.isEmpty()) {
+//			}
+//
+//			String pincode = details.getPincode();
+//			if (pincode == null || pincode.isEmpty() || !pincode.matches("^[0-9]{6}$"))
+//				return false;
+//
+//			String city = details.getCity();
+//			if (city == null || city.isEmpty() || !city.matches("^[A-Za-z\\s]+$"))
+//				return false;
+//
+//			String state = details.getState();
+//			if (state == null || state.isEmpty() || !state.matches("^[A-Za-z\\s]+$"))
+//				return false;
+//
+//			return true;
+//		} catch (Exception e) {
+//			return false;
+//		}
+//	}
+//
+//	private Integer getGenderId(Gender gender) {
+//		switch (gender) {
+//		case MALE:
+//			return 1;
+//		case FEMALE:
+//			return 2;
+//		case OTHER:
+//			return 3;
+//		}
+//		return null;
+//
+//	}
+//
+//	private String getCellString(Cell cell) {
+//		if (cell == null)
+//			return "";
+//		if (cell.getCellType() == CellType.STRING) {
+//			return cell.getStringCellValue();
+//
+//		} else if (cell.getCellType() == CellType.NUMERIC && !DateUtil.isCellDateFormatted(cell)) {
+//			return String.valueOf((long) cell.getNumericCellValue());
+//		} else if (cell.getCellType() == CellType.BOOLEAN) {
+//			return String.valueOf(cell.getBooleanCellValue());
+//		} else {
+//			return "";
+//		}
+//	}
+
 	@Override
 	public List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException {
-		List<PersonalDetails> savedExcelList = new ArrayList<>();
+		List<PersonalDetails> savedList = new ArrayList<>();
+
 		try (XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream())) {
 			XSSFSheet sheet = workbook.getSheetAt(0);
+
 			for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 				XSSFRow row = sheet.getRow(i);
 				if (row == null)
 					continue;
-				PersonalDetailsDto dto = new PersonalDetailsDto();
-				dto.setTitle(getCellString(row.getCell(0)));
-				dto.setFullName(getCellString(row.getCell(1)));
-				dto.setGender(getCellString(row.getCell(2)));
+
+				PersonalDetails details = new PersonalDetails();
+
+				String titleStr = getCellString(row.getCell(0)).trim().toUpperCase();
+				Title title = null;
+				for (Title t : Title.values()) {
+					if (t.name().equals(titleStr)) {
+						title = t;
+						break;
+					}
+				}
+				if (title == null) {
+					System.out.println("Invalid Title at row " + i);
+					continue;
+				}
+				details.setTitle(title);
+
+				String fullName = getCellString(row.getCell(1)).trim();
+				if (fullName != null && fullName.matches("^[A-Za-z\\s]+$")) {
+					details.setFullName(fullName);
+				} else {
+					System.out.println("Invalid or empty Full Name at row " + i);
+					continue;
+				}
+
+				String genderStr = getCellString(row.getCell(2)).trim().toUpperCase();
+				Gender gender = null;
+				for (Gender g : Gender.values()) {
+					if (g.name().equals(genderStr)) {
+						gender = g;
+						break;
+					}
+				}
+				if (gender == null) {
+					System.out.println("Invalid Gender at row " + i);
+					continue;
+				}
+				details.setGender(gender);
+				details.setGenderId(getGenderId(gender));
 
 				Cell dobCell = row.getCell(3);
-				if (dobCell != null && dobCell.getCellType() == CellType.NUMERIC
-						&& DateUtil.isCellDateFormatted(dobCell)) {
-					dto.setDateOfBirth(dobCell.getLocalDateTimeCellValue().toLocalDate());
+				if (dobCell != null && DateUtil.isCellDateFormatted(dobCell)) {
+					details.setDateOfBirth(dobCell.getLocalDateTimeCellValue().toLocalDate());
 				}
-				dto.setNationality(getCellString(row.getCell(4)));
-				dto.setMaritalStatus(getCellString(row.getCell(5)));
-				dto.setPanNumber(getCellString(row.getCell(6)));
-				dto.setEmailId(getCellString(row.getCell(7)));
-				dto.setMobileNumber(getCellString(row.getCell(8)));
-				dto.setAlternateMobileNumber(getCellString(row.getCell(9)));
-				dto.setAddress(getCellString(row.getCell(10)));
-				dto.setPincode(getCellString(row.getCell(11)));
-				dto.setCity(getCellString(row.getCell(12)));
-				dto.setState(getCellString(row.getCell(13)));
 
-				PersonalDetails saved = savePersonalDetails(dto);
-				savedExcelList.add(saved);
+				String nationalityStr = getCellString(row.getCell(4)).trim().toUpperCase();
+				Nationality nationality = null;
+				for (Nationality n : Nationality.values()) {
+					if (n.name().equals(nationalityStr)) {
+						nationality = n;
+						break;
+					}
+				}
+				if (nationality == null) {
+					System.out.println("Invalid Nationality at row " + i);
+					continue;
+				}
+				details.setNationality(nationality);
 
+				String maritalStr = getCellString(row.getCell(5)).trim().toUpperCase();
+				MaritalStatus maritalStatus = null;
+				for (MaritalStatus m : MaritalStatus.values()) {
+					if (m.name().equals(maritalStr)) {
+						maritalStatus = m;
+						break;
+					}
+				}
+				if (maritalStatus == null) {
+					System.out.println("Invalid Marital Status at row " + i);
+					continue;
+				}
+				details.setMaritalStatus(maritalStatus);
+
+				String panNumber = getCellString(row.getCell(6)).trim();
+				if (panNumber != null && panNumber.matches("^[A-Z]{5}[0-9]{4}[A-Z]$")) {
+					details.setPanNumber(panNumber);
+				} else {
+					System.out.println("Invalid or empty PAN Number at row " + i);
+					continue;
+				}
+
+				String emailId = getCellString(row.getCell(7)).trim();
+				if (emailId != null && emailId.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+					details.setEmailId(emailId);
+				} else {
+					System.out.println("Invalid or empty Email ID at row " + i);
+					continue;
+				}
+
+				String mobileNumber = getCellString(row.getCell(8)).trim();
+				if (mobileNumber != null && mobileNumber.matches("^[0-9]{10}$")) {
+					details.setMobileNumber(mobileNumber);
+				} else {
+					System.out.println("Invalid or empty Mobile Number at row " + i);
+					continue;
+				}
+
+				String alternateMobileNumber = getCellString(row.getCell(9)).trim();
+				if (alternateMobileNumber != null && alternateMobileNumber.matches("^[0-9]{10}$")) {
+					details.setAlternateMobileNumber(alternateMobileNumber);
+				} else {
+					System.out.println("Invalid or empty Alternate Mobile Number at row " + i);
+					continue;
+				}
+
+				String address = getCellString(row.getCell(10)).trim();
+				if (address != null && !address.isEmpty()) {
+					details.setAddress(address);
+				} else {
+					System.out.println("Invalid or empty Address at row " + i);
+					continue;
+				}
+
+				String pincode = getCellString(row.getCell(11)).trim();
+				if (pincode != null && pincode.matches("^[0-9]{6}$")) {
+					details.setPincode(pincode);
+				} else {
+					System.out.println("Invalid or empty Pincode at row " + i);
+					continue;
+				}
+
+				String city = getCellString(row.getCell(12)).trim();
+				if (city != null && city.matches("^[A-Za-z\\s]+$")) {
+					details.setCity(city);
+				} else {
+					System.out.println("Invalid or empty City at row " + i);
+					continue;
+				}
+
+				String state = getCellString(row.getCell(13)).trim();
+				if (state != null && state.matches("^[A-Za-z\\s]+$")) {
+					details.setState(state);
+				} else {
+					System.out.println("Invalid or empty State at row " + i);
+					continue;
+				}
+
+				details.setStatus('Y');
+
+//				if (validateDetails(details)) {
+					savedList.add(personalDetailsRepository.save(details));
+//				} else {
+//					System.out.println("Skipping invalid row " + i);
+//
+//				}
 			}
-			return savedExcelList;
+		}
+
+		return savedList;
+	}
+
+	private Integer getGenderId(Gender gender) {
+		switch (gender) {
+		case MALE:
+			return 1;
+		case FEMALE:
+			return 2;
+		case OTHER:
+			return 3;
+		default:
+			return null;
 		}
 	}
+
+//	private boolean validateDetails(PersonalDetails d) {
+//		return (d.getFullName() != null && d.getFullName().matches("^[A-Za-z\\s]+$"))
+//				&& (d.getPanNumber() != null && d.getPanNumber().matches("^[A-Z]{5}[0-9]{4}[A-Z]$"))
+//				&& (d.getEmailId() != null && d.getEmailId().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))
+//				&& (d.getMobileNumber() != null && d.getMobileNumber().matches("^[0-9]{10}$"))
+//				&& (d.getAlternateMobileNumber() != null && d.getAlternateMobileNumber().matches("^[0-9]{10}$"))
+//				&& (d.getPincode() != null && d.getPincode().matches("^[0-9]{6}$"))
+//				&& (d.getCity() != null && d.getCity().matches("^[A-Za-z\\s]+$"))
+//				&& (d.getState() != null && d.getState().matches("^[A-Za-z\\s]+$"));
+//	}
 
 	private String getCellString(Cell cell) {
 		if (cell == null)
 			return "";
-		if (cell.getCellType() == CellType.STRING) {
+		switch (cell.getCellType()) {
+		case STRING:
 			return cell.getStringCellValue();
-
-		} else if (cell.getCellType() == CellType.NUMERIC && !DateUtil.isCellDateFormatted(cell)) {
-			return String.valueOf((long) cell.getNumericCellValue()); 
-		} else if (cell.getCellType() == CellType.BOOLEAN) {
+		case NUMERIC:
+			return DateUtil.isCellDateFormatted(cell) ? "" : String.valueOf((long) cell.getNumericCellValue());
+		case BOOLEAN:
 			return String.valueOf(cell.getBooleanCellValue());
-		} else {
+		default:
 			return "";
 		}
 	}
-
 }

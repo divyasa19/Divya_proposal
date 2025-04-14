@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
 public class PersonalDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="peronal_details_id")
+	@Column(name = "peronal_details_id")
 	private Integer personalDetailsId;
 
 	@Enumerated(EnumType.STRING)
@@ -83,16 +83,13 @@ public class PersonalDetails {
 	@Column(name = "updated_at")
 	@UpdateTimestamp
 	private LocalDateTime updatedAt;
-	
-	
+
 	@Column(name = "gender_id")
 	private Integer genderId;
 
 	public PersonalDetails() {
 
 	}
-
-	
 
 	public PersonalDetails(Integer personalDetailsId, Title title, String fullName, Gender gender,
 			LocalDate dateOfBirth, Nationality nationality, MaritalStatus maritalStatus, String panNumber,
@@ -120,8 +117,6 @@ public class PersonalDetails {
 		this.updatedAt = updatedAt;
 		this.genderId = genderId;
 	}
-
-
 
 	public Integer getPersonalDetailsId() {
 		return personalDetailsId;
@@ -273,5 +268,5 @@ public class PersonalDetails {
 
 	public void setGenderId(Integer genderId) {
 		this.genderId = genderId;
-	}	
+	}
 }
