@@ -30,6 +30,6 @@ public interface PersonalDetailsService {
 	void exportPersonalDetailsToExcel(HttpServletResponse response) throws IOException;
 
 	String sampleExcel() throws IOException;
-	
-	  List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException;
+
+	List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException;
 }
