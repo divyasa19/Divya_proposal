@@ -251,13 +251,20 @@ public class PersonalDetailsController {
 	@PostMapping(value = "import_personal_details", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseHandler importPersonalDetails(
 			@Parameter(description = "Excel file to upload", required = true) @RequestParam("file") MultipartFile file) {
+
 		ResponseHandler responseHandler = new ResponseHandler();
 		try {
 			List<PersonalDetails> savedExceList = personalDetailsService.importPersonalDetailsFromExcel(file);
+			Integer totalRecords = personalDetailsService.totalRecords();
+			Integer successCount = savedExceList.size();
+			Integer failedCount = personalDetailsService.failedRecords();
 
 			responseHandler.setData(savedExceList);
-			responseHandler.setMessage("Excel data imported successfully");
+			responseHandler.setMessage("Excel data imported successfully. row saved  " + successCount
+					+ " failed records : " + failedCount + ", total records: " + totalRecords);
 			responseHandler.setStatus(true);
+			responseHandler.setTotalRecords(totalRecords);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			responseHandler.setMessage("Failed to import Excel data: " + e.getMessage());

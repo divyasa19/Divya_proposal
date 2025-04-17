@@ -26,6 +26,7 @@ public interface PersonalDetailsService {
 	List<PersonalDetails> getPersonalDetails(ProposerListing proposerListig);
 
 	Integer totalRecords();
+	Integer failedRecords();
 
 	void exportPersonalDetailsToExcel(HttpServletResponse response) throws IOException;
 
