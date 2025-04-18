@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -51,10 +52,10 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 	@Autowired
 	private PersonalDetailsRepository personalDetailsRepository;
 
-//	Integer totalRecord = 0;
-	Integer totalRecord;
-	
-	Integer failedRecord;
+	Integer totalRecord = 0;
+//	Integer totalRecord;
+
+//	Integer failedRecord;
 
 	@Autowired
 	private ResponseExcelRepository responseExcelRepository;
@@ -64,12 +65,12 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 
 		return totalRecord;
 	}
-	
-	@Override
-	public Integer failedRecords() {
 
-		return failedRecord;
-	}
+//	@Override
+//	public Integer failedRecords() {
+//
+//		return failedRecord;
+//	}
 
 	@Override
 	public PersonalDetails savePersonalDetails(PersonalDetailsDto personalDetailsDto) {
@@ -760,15 +761,16 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 //	}
 
 	@Override
-	public List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file) throws IOException {
+	public List<PersonalDetails> importPersonalDetailsFromExcel(MultipartFile file, Map<String, Integer> recordCount)
+			throws IOException {
 		List<PersonalDetails> savedList = new ArrayList<>();
 
 		XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
 		XSSFSheet sheet = workbook.getSheetAt(0);
-	
-		totalRecord=0;
-		failedRecord=0;
-		
+
+		recordCount.put("totalExcelCount", 0);
+		recordCount.put("errorExcelCount", 0);
+
 		for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 			XSSFRow row = sheet.getRow(i);
 //			System.err.println("row" + row);
@@ -777,7 +779,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 				continue;
 			}
 
-			totalRecord++;			
+			recordCount.put("totalExcelCount", recordCount.get("totalExcelCount") + 1);
 
 			PersonalDetails details = new PersonalDetails();
 
@@ -791,15 +793,15 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			}
 			if (title == null) {
 				saveError("Invalid or empty Title", "title", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setTitle(title);
 
 			String fullName = getCellString(row.getCell(1)).trim();
-			if (isNullOrEmpty(fullName) ||!fullName.matches("[a-zA-Z\\s]+")) {
+			if (isNullOrEmpty(fullName) || !fullName.matches("[a-zA-Z\\s]+")) {
 				saveError("Invalid or empty Full Name", "fullName", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 
@@ -815,7 +817,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			}
 			if (gender == null) {
 				saveError("Invalid or empty Gender", "gender", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setGender(gender);
@@ -835,7 +837,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 				details.setDateOfBirth(dobCell.getLocalDateTimeCellValue().toLocalDate());
 			} else {
 				saveError("Invalid or empty Date of Birth", "dateOfBirth", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 
@@ -872,7 +874,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			if (isNullOrEmpty(panNumber) || !panNumber.matches("[A-Z]{5}[0-9]{4}[A-Z]{1}")) {
 
 				saveError("Invalid or empty PAN Number", "panNumber", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setPanNumber(panNumber);
@@ -880,7 +882,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			String emailId = getCellString(row.getCell(7)).trim();
 			if (isNullOrEmpty(emailId) || !emailId.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
 				saveError("Invalid or empty Email ID", "emailId", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setEmailId(emailId);
@@ -888,7 +890,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			String mobileNumber = getCellString(row.getCell(8)).trim();
 			if (isNullOrEmpty(mobileNumber) || !mobileNumber.matches("[6789]\\d{9}")) {
 				saveError("Invalid or empty Mobile Number", "mobileNumber", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setMobileNumber(mobileNumber);
@@ -906,7 +908,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			String address = getCellString(row.getCell(10)).trim();
 			if (isNullOrEmpty(address)) {
 				saveError("Invalid or empty Address", "address", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setAddress(address);
@@ -914,7 +916,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			String pincode = getCellString(row.getCell(11)).trim();
 			if (isNullOrEmpty(pincode) || !pincode.matches("[0-9]{6}")) {
 				saveError("Invalid or empty Pincode", "pincode", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setPincode(pincode);
@@ -922,7 +924,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 			String city = getCellString(row.getCell(12)).trim();
 			if (isNullOrEmpty(city) || !city.matches("[A-Za-z\\s]+")) {
 				saveError("Invalid or empty City", "city", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setCity(city);
@@ -931,32 +933,30 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 
 			if (isNullOrEmpty(state) || !state.matches("[A-Za-z\\s]+")) {
 				saveError("Invalid or empty State", "state", i);
-				failedRecord++;
+				recordCount.put("errorExcelCount", recordCount.get("errorExcelCount") + 1);
 				continue;
 			}
 			details.setState(state);
 
 			details.setStatus('Y');
 
-			
-
-				PersonalDetails saveDetails = personalDetailsRepository.save(details);
-				savedList.add(saveDetails);
+			PersonalDetails saveDetails = personalDetailsRepository.save(details);
+			savedList.add(saveDetails);
 
 //				savedList.add(personalDetailsRepository.save(details));				
-				ResponseExcel responseExcel = new ResponseExcel();
-				responseExcel.setStatus(true);
-				responseExcel.setError("success");
-				responseExcel.setUpdateMsg("Inserted Successfully");
+			ResponseExcel responseExcel = new ResponseExcel();
+			responseExcel.setStatus(true);
+			responseExcel.setError("success");
+			responseExcel.setUpdateMsg("Inserted Successfully");
 
-				responseExcel.setErrorField(details.getPersonalDetailsId().toString());
-				responseExcelRepository.save(responseExcel);			
+			responseExcel.setErrorField(details.getPersonalDetailsId().toString());
+			responseExcelRepository.save(responseExcel);
+
 		}
-		
-	
+
 		workbook.close();
 		return savedList;
-		
+
 	}
 
 	public boolean isRowCompletelyEmpty(Row row) {
@@ -975,7 +975,7 @@ public class PersonalDetailsServiceImp implements PersonalDetailsService {
 
 	private void saveError(String errorMsg, String field, int rowIndex) {
 		ResponseExcel response = new ResponseExcel();
-		
+
 		response.setStatus(false);
 		response.setError(errorMsg);
 		response.setUpdateMsg("Failed");

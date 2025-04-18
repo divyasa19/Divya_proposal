@@ -8,27 +8,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="response_excel")
+@Table(name = "response_excel")
 public class ResponseExcel {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="response_excel_id")
+	@Column(name = "response_excel_id")
 	private Integer responseExcelId;
-	
-	@Column(name="status")
+
+	@Column(name = "status")
 	private Boolean status;
-	
-	@Column(name="error")
+
+	@Column(name = "error")
 	private String error;
-	
-	@Column(name="update_msg")
+
+	@Column(name = "update_msg")
 	private String updateMsg;
-	
-	@Column(name="error_field")
+
+	@Column(name = "error_field")
 	private String errorField;
-	
-	
 
 	public ResponseExcel() {
 		super();
@@ -82,18 +80,5 @@ public class ResponseExcel {
 	public void setErrorField(String errorField) {
 		this.errorField = errorField;
 	}
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
-	
-	
 }

@@ -2,7 +2,9 @@ package com.example.practice1.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,16 +256,21 @@ public class PersonalDetailsController {
 
 		ResponseHandler responseHandler = new ResponseHandler();
 		try {
-			List<PersonalDetails> savedExceList = personalDetailsService.importPersonalDetailsFromExcel(file);
-			Integer totalRecords = personalDetailsService.totalRecords();
+			Map<String, Integer> recordCount = new HashMap<>();
+
+			List<PersonalDetails> savedExceList = personalDetailsService.importPersonalDetailsFromExcel(file,
+					recordCount);
+
+			Integer totalExcelCount = recordCount.getOrDefault("totalExcelCount", 0);
+			Integer errorExcelCount = recordCount.getOrDefault("errorExcelCount", 0);
+
 			Integer successCount = savedExceList.size();
-			Integer failedCount = personalDetailsService.failedRecords();
 
 			responseHandler.setData(savedExceList);
 			responseHandler.setMessage("Excel data imported successfully. row saved  " + successCount
-					+ " failed records : " + failedCount + ", total records: " + totalRecords);
+					+ " failed records : " + errorExcelCount + ", total records: " + totalExcelCount);
 			responseHandler.setStatus(true);
-			responseHandler.setTotalRecords(totalRecords);
+			responseHandler.setTotalRecords(totalExcelCount);
 
 		} catch (Exception e) {
 			e.printStackTrace();
